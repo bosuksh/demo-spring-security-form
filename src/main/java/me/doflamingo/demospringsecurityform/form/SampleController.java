@@ -1,4 +1,4 @@
-package me.doflamingo.demospringsecurityform;
+package me.doflamingo.demospringsecurityform.form;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
