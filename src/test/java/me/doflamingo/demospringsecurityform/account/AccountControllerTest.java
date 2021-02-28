@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.MockMvcAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithAnonymousUser;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -24,6 +26,7 @@ class AccountControllerTest {
 
   @Test
   @DisplayName("비로그인 유저로 admin page")
+  @WithAnonymousUser
   public void admin_with_anonymous() throws Exception {
     //given
 
@@ -35,19 +38,21 @@ class AccountControllerTest {
   }
   @Test
   @DisplayName("일반 유저로 index page")
+  @WithMockUser(username = "user", roles = {"USER"})
   public void index_with_user() throws Exception {
-    mockMvc.perform(get("/").with(user("user").roles("USER")))
+    mockMvc.perform(get("/"))
       .andDo(print())
       .andExpect(status().isOk());
   }
 
   @Test
-  @DisplayName("어드맨 유저로 index page")
+  @DisplayName("어드민 유저로 index page")
+  @WithMockUser(username = "admin", roles = {"ADMIN"})
   public void index_with_admin() throws Exception {
     //given
 
     //when
-    mockMvc.perform(get("/").with(user("ADMIN").roles("ADMIN")))
+    mockMvc.perform(get("/"))
       .andDo(print())
     //then
       .andExpect(status().isOk());
@@ -55,11 +60,12 @@ class AccountControllerTest {
 
   @Test
   @DisplayName("일반 유저로 admin page")
+  @WithMockUser(username = "user", roles = {"USER"})
   public void admin_with_user() throws Exception {
     //given
 
     //when
-    mockMvc.perform(get("/admin").with(user("user").roles("USER")))
+    mockMvc.perform(get("/admin"))
       .andDo(print())
     //then
       .andExpect(status().isForbidden());
@@ -67,11 +73,12 @@ class AccountControllerTest {
 
   @Test
   @DisplayName("어드민 유저로 admin page")
+  @WithMockUser(username = "admin", roles = {"ADMIN"})
   public void admin_with_admin() throws Exception {
     //given
 
     //when
-    mockMvc.perform(get("/admin").with(user("admin").roles("ADMIN")))
+    mockMvc.perform(get("/admin"))
       .andDo(print())
       //then
       .andExpect(status().isOk());
