@@ -4,15 +4,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.MockMvcAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithAnonymousUser;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.anonymous;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -38,7 +34,7 @@ class AccountControllerTest {
   }
   @Test
   @DisplayName("일반 유저로 index page")
-  @WithMockUser(username = "user", roles = {"USER"})
+  @WithUser
   public void index_with_user() throws Exception {
     mockMvc.perform(get("/"))
       .andDo(print())
@@ -47,7 +43,7 @@ class AccountControllerTest {
 
   @Test
   @DisplayName("어드민 유저로 index page")
-  @WithMockUser(username = "admin", roles = {"ADMIN"})
+  @WithAdminUser
   public void index_with_admin() throws Exception {
     //given
 
@@ -60,7 +56,7 @@ class AccountControllerTest {
 
   @Test
   @DisplayName("일반 유저로 admin page")
-  @WithMockUser(username = "user", roles = {"USER"})
+  @WithUser
   public void admin_with_user() throws Exception {
     //given
 
@@ -73,7 +69,7 @@ class AccountControllerTest {
 
   @Test
   @DisplayName("어드민 유저로 admin page")
-  @WithMockUser(username = "admin", roles = {"ADMIN"})
+  @WithAdminUser
   public void admin_with_admin() throws Exception {
     //given
 
