@@ -1,5 +1,7 @@
 package me.doflamingo.demospringsecurityform.form;
 
+import me.doflamingo.demospringsecurityform.account.AccountContext;
+import me.doflamingo.demospringsecurityform.account.AccountRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,9 +12,11 @@ import java.security.Principal;
 public class SampleController {
 
   private final SampleService sampleService;
+  private final AccountRepository accountRepository;
 
-  public SampleController(SampleService sampleService) {
+  public SampleController(SampleService sampleService, AccountRepository accountRepository) {
     this.sampleService = sampleService;
+    this.accountRepository = accountRepository;
   }
 
 
@@ -33,6 +37,7 @@ public class SampleController {
 
   @GetMapping("/dashboard")
   public String dashboard(Model model, Principal principal){
+    AccountContext.setAccount(accountRepository.findByUsername(principal.getName()).get());
     sampleService.dashboard();
     model.addAttribute("message","Hello "+ principal.getName());
     return "dashboard";
