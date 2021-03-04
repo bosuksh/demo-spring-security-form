@@ -29,17 +29,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   }
 
   public AccessDecisionManager accessDecisionManager() {
-    RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
-    roleHierarchy.setHierarchy("ROLE_ADMIN > ROLE_USER");
-
-    DefaultWebSecurityExpressionHandler handler = new DefaultWebSecurityExpressionHandler();
-    handler.setRoleHierarchy(roleHierarchy);
+    DefaultWebSecurityExpressionHandler handler = getExpressionHandler();
 
     WebExpressionVoter webExpressionVoter = new WebExpressionVoter();
     webExpressionVoter.setExpressionHandler(handler);
 
     List<AccessDecisionVoter<? extends Object>> decisionVoters = Arrays.asList(webExpressionVoter);
     return new AffirmativeBased(decisionVoters);
+  }
+
+  public DefaultWebSecurityExpressionHandler getExpressionHandler() {
+    RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+    roleHierarchy.setHierarchy("ROLE_ADMIN > ROLE_USER");
+
+    DefaultWebSecurityExpressionHandler handler = new DefaultWebSecurityExpressionHandler();
+    handler.setRoleHierarchy(roleHierarchy);
+    return handler;
   }
 
   @Override
@@ -50,7 +55,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       .mvcMatchers("/admin").hasRole("ADMIN")
       .mvcMatchers("/user").hasRole("USER")
       .anyRequest().authenticated()
-    .accessDecisionManager(accessDecisionManager());
+    //.accessDecisionManager(accessDecisionManager());
+    .expressionHandler(getExpressionHandler());
 
     http.formLogin();
     http.httpBasic();
