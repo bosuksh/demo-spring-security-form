@@ -52,7 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   }
 
   @Override
-  public void configure(WebSecurity web) throws Exception {
+  public void configure(WebSecurity web) {
     web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     web.ignoring().requestMatchers(PathRequest.toH2Console());
   }
@@ -71,6 +71,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     http.formLogin();
     http.httpBasic();
 
+    http.logout().logoutSuccessUrl("/");
     SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
   }
 
