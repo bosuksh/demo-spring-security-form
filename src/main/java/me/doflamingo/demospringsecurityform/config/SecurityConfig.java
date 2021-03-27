@@ -17,6 +17,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.access.expression.WebExpressionVoter;
+import org.springframework.security.web.session.InvalidSessionStrategy;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import java.util.Arrays;
@@ -76,6 +77,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     http.logout()
       .logoutSuccessUrl("/");
+
+    http.sessionManagement()
+      .invalidSessionUrl("/")
+      .maximumSessions(1)
+      .expiredUrl("/");
     SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
   }
 
