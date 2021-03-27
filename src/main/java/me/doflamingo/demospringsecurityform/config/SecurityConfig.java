@@ -81,7 +81,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     http.sessionManagement()
       .invalidSessionUrl("/")
       .maximumSessions(1)
-      .expiredUrl("/");
+      .expiredUrl("/")
+      .maxSessionsPreventsLogin(true);
     SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
   }
 
